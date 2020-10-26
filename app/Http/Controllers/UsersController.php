@@ -8,7 +8,13 @@ use App\User; // 追加
 
 class UsersController extends Controller
 {
-   public function show($id)
+   /**
+     * ユーザのフォロー一覧ページを表示するアクション。
+     *
+     * @param  $id  ユーザのid
+     * @return \Illuminate\Http\Response
+     */
+    public function followings($id)
     {
         // idの値でユーザを検索して取得
         $user = User::findOrFail($id);
@@ -16,15 +22,40 @@ class UsersController extends Controller
         // 関係するモデルの件数をロード
         $user->loadRelationshipCounts();
 
-        // ユーザの投稿一覧を作成日時の降順で取得
-        $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
+        // ユーザのフォロー一覧を取得
+        $followings = $user->followings()->paginate(10);
 
-        // ユーザ詳細ビューでそれらを表示
-        return view('users.show', [
+        // フォロー一覧ビューでそれらを表示
+        return view('users.followings', [
             'user' => $user,
-            'microposts' => $microposts,
+            'users' => $followings,
         ]);
     }
+
+    /**
+     * ユーザのフォロワー一覧ページを表示するアクション。
+     *
+     * @param  $id  ユーザのid
+     * @return \Illuminate\Http\Response
+     */
+    public function followers($id)
+    {
+        // idの値でユーザを検索して取得
+        $user = User::findOrFail($id);
+
+        // 関係するモデルの件数をロード
+        $user->loadRelationshipCounts();
+
+        // ユーザのフォロワー一覧を取得
+        $followers = $user->followers()->paginate(10);
+
+        // フォロワー一覧ビューでそれらを表示
+        return view('users.followers', [
+            'user' => $user,
+            'users' => $followers,
+        ]);
+    }
+    
     /**
      * このユーザに関係するモデルの件数をロードする。
      */
