@@ -22,10 +22,16 @@
                             {!! Form::close() !!}
                         @endif
                     </div>
-                </div>
+                    
+                     <div>
+                        
+                        @include('user_favorite.favorite_button')
+                       
+                    </div>
+                    {{-- お気に入り一覧タブ --}}
             </li>
         @endforeach
     </ul>
     {{-- ページネーションのリンク --}}
-    {{ $microposts->links() }}
+    {{ $microposts ?? ''->links() }}
 @endif
